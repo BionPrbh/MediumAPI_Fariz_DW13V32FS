@@ -18,7 +18,7 @@ app.use(express.json());
 //Controllers
 const CategoriesController = require("./controllers/categories")
 // const AccountController = require("./controllers/account");
-// const ArticleController = require("./controllers/article");
+const ArticlesController = require("./controllers/articles");
 // const AuthController = require("./controllers/auth");
 
 //Middleware
@@ -56,6 +56,9 @@ app.group("/api/v1", router => {
   router.get("/categories", CategoriesController.index);
   // POST a categories
   router.post("/categories", CategoriesController.create)
+
+  // GET all articles
+  router.get("/articles", ArticlesController.index)
 });
 
 // app.use((err, req, res, next) => {
