@@ -19,10 +19,10 @@ app.use(express.json());
 const CategoriesController = require("./controllers/categories")
 // const AccountController = require("./controllers/account");
 const ArticlesController = require("./controllers/articles");
-// const AuthController = require("./controllers/auth");
+const AuthController = require("./controllers/auth");
 
 //Middleware
-// const { auth, authorized } = require("./middleware");
+const { authenticated, authorized } = require("./middleware");
 
 //Create get Response
 app.get("/", (req, res) => {
@@ -42,15 +42,9 @@ app.group("/api/v1", router => {
   // //DELETE an account
   // router.delete("/account/:id", AccountController.delete);
   // //GET ARTICLE by account_id
-  // router.get(
-  //   "/article/:account_id",
-  //   auth,
-  //   authorized,
-  //   ArticleController.getArticle
-  // );
 
   // //POST-LOGIN
-  // router.post("/login", AuthController.login);
+  router.post("/login", AuthController.login);
 
   // ------ CATEGORIES ------
 
@@ -61,22 +55,28 @@ app.group("/api/v1", router => {
   // GET all articles of a category
   router.get("/category/:category_id/articles", CategoriesController.getArticleByCategories)
 
+
   // ------- ARTICLES ------
 
   // GET all articles
   router.get("/articles", ArticlesController.index)
   // GET all articles DESCENDING limit 10
   router.get("/articles-desc", ArticlesController.ascnd10)
-
+  // POST new article 
+  router.post('/article', authorized, authenticated, ArticlesController.create)
+  // PUT new article
+  router.put('/article/:id', authorized, authenticated, ArticlesController.update)
+  // DELETE one article
+  router.delete('/article/:id', authorized, authenticated, ArticlesController.delete)
 });
 
-// app.use((err, req, res, next) => {
-//   if (err.name === "UnauthorizedError") {
-//     res.status(401).json({ message: "You are not authorized." });
-//   } else {
-//     next(err);
-//   }
-// });
+app.use((err, req, res, next) => {
+  if (err.name === "UnauthorizedError") {
+    res.status(401).json({ message: "You are not authorized." });
+  } else {
+    next(err);
+  }
+});
 
 //Server must to listen to port
-app.listen(port, () => console.log(`Server is listening to Port: {port}`));
+app.listen(port, () => console.log(`Server is listening to Port: ${port}`));
