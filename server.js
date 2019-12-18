@@ -52,10 +52,16 @@ app.group("/api/v1", router => {
   // //POST-LOGIN
   // router.post("/login", AuthController.login);
 
+  // ------ CATEGORIES ------
+
   // GET all categories
   router.get("/categories", CategoriesController.index);
   // POST a categories
   router.post("/categories", CategoriesController.create)
+  // GET all articles of a category
+  router.get("/category/:category_id/articles", CategoriesController.getArticleByCategories)
+
+  // ------- ARTICLES ------
 
   // GET all articles
   router.get("/articles", ArticlesController.index)
@@ -73,4 +79,4 @@ app.group("/api/v1", router => {
 // });
 
 //Server must to listen to port
-app.listen(port, () => console.log(`Server is listening to Port: ${port}`));
+app.listen(port, () => console.log(`Server is listening to Port: {port}`));
