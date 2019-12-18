@@ -59,6 +59,9 @@ app.group("/api/v1", router => {
 
   // GET all articles
   router.get("/articles", ArticlesController.index)
+  // GET all articles DESCENDING limit 10
+  router.get("/articles-desc", ArticlesController.ascnd10)
+
 });
 
 // app.use((err, req, res, next) => {
@@ -70,4 +73,4 @@ app.group("/api/v1", router => {
 // });
 
 //Server must to listen to port
-app.listen(port, () => console.log(`Server is listening to Port: port`));
+app.listen(port, () => console.log(`Server is listening to Port: ${port}`));
