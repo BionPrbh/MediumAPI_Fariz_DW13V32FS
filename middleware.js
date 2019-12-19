@@ -6,7 +6,7 @@ exports.authenticated = jwt({
 })
 
 exports.authorized = (req,res,next) => {
-  if (req.author_id != req.params.Users) {
+  if (req.user_id != req.params.id) {
     return res.status(401).json({ message: "You are not authenticated." });
   }
   next();

@@ -1,6 +1,7 @@
 const Articles = require("../models").Article;
 const Users = require("../models").User;
 const Categories = require("../models").Category
+const Comments = require("../models").Comment
 
 // get all articles
 exports.index = (req, res) => {
@@ -74,4 +75,51 @@ exports.delete = (req, res) => {
       id: req.params.id
     }
   }).then(res.send({message:'delete success'}))
+}
+``
+exports.detailed = (req,res) => {
+  Articles.findOne({
+    include:[
+      {
+        model:Categories,
+        as: 'Category',
+        attributes: {
+          exclude: [
+            "is_published",
+            "is_archived",
+            "createdAt",
+            "updatedAt"
+          ]
+        }
+      },
+      {
+        model:Comments,
+        as: 'Comment',
+        attributes:{
+          exclude: [
+            "is_published",
+            "is_archived",
+            "article_id",
+            "user_id"
+          ]
+        },
+        where: {
+          article_id: req.params.id
+        }
+      }
+    ],
+    attributes:{
+      exclude: [
+        "category_id",
+        "category_name",
+        "is_published",
+        "is_archived",
+        "slug",
+        "author_id"
+      ]
+    },
+    where: {
+      id: req.params.id
+    }
+  }).then(data => res.send(data))
 }

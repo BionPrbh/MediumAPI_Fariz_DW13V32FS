@@ -17,12 +17,16 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'category_id',
       as: 'Category',
       sourceKey: 'id'
-    })
+    });
     Article.belongsTo(models.User, {
       foreignKey: 'author_id',
       as: 'Author',
       sourceKey: 'id'
-    })
+    });
+    Article.hasMany(models.Comment, {
+      foreignKey: 'article_id',
+      as:'Comment',
+    });
   };
   return Article;
 };

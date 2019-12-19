@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     is_active: DataTypes.BOOLEAN
   }, {});
   User.associate = function(models) {
-    User.hasMany(models.Article, {as: 'articles', foreignKey: 'author_id'})  };
+    User.hasMany(models.Article, {as: 'Articles', foreignKey: 'author_id'}) 
+   };
   return User;
 };

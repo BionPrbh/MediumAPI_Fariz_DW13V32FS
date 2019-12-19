@@ -20,6 +20,7 @@ const CategoriesController = require("./controllers/categories")
 // const AccountController = require("./controllers/account");
 const ArticlesController = require("./controllers/articles");
 const AuthController = require("./controllers/auth");
+const CommentController = require("./controllers/comment")
 
 //Middleware
 const { authenticated, authorized } = require("./middleware");
@@ -63,20 +64,28 @@ app.group("/api/v1", router => {
   // GET all articles DESCENDING limit 10
   router.get("/articles-desc", ArticlesController.ascnd10)
   // POST new article 
-  router.post('/article', authorized, authenticated, ArticlesController.create)
+  router.post('/article', ArticlesController.create)
   // PUT new article
-  router.put('/article/:id', authorized, authenticated, ArticlesController.update)
+  router.put('/article/:id', ArticlesController.update)
   // DELETE one article
-  router.delete('/article/:id', authorized, authenticated, ArticlesController.delete)
+  router.delete('/article/:id', ArticlesController.delete)
+  // GET detail article
+  router.get('/article/:id', ArticlesController.detailed)
+  
+  // ------ Comments ------
+  
+  
+  // POST a comment 
+  router.post('/article/:article_id/comment', CommentController.create)
 });
 
-app.use((err, req, res, next) => {
-  if (err.name === "UnauthorizedError") {
-    res.status(401).json({ message: "You are not authorized." });
-  } else {
-    next(err);
-  }
-});
+// app.use((err, req, res, next) => {
+//   if (err.name === "UnauthorizedError") {
+//     res.status(401).json({ message: "You are not authorized." });
+//   } else {
+//     next(err);
+//   }
+// });
 
 //Server must to listen to port
 app.listen(port, () => console.log(`Server is listening to Port: ${port}`));
