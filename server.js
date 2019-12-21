@@ -7,8 +7,7 @@ const cors = require("cors");
 //Use express variable in app
 const app = express();
 //Define port to listen from server
-const port = 8000;
-
+const port = process.env.PORT || 8000	
 //Cross origin policy
 app.use(cors());
 
