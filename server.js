@@ -7,7 +7,7 @@ const cors = require("cors");
 //Use express variable in app
 const app = express();
 //Define port to listen from server
-const port = 5000;
+const port = 8000;
 
 //Cross origin policy
 app.use(cors());
@@ -17,13 +17,15 @@ app.use(express.json());
 
 //Controllers
 const CategoriesController = require("./controllers/categories")
-// const AccountController = require("./controllers/account");
 const ArticlesController = require("./controllers/articles");
-const AuthController = require("./controllers/auth");
-const CommentController = require("./controllers/comment")
+const CommentsController = require("./controllers/comments")
+const UsersController = require('./controllers/users')
 
-//Middleware
-const { authenticated, authorized } = require("./middleware");
+// const AuthController = require("./controllers/auth");
+
+// middleware belum berfungsi
+// Middleware
+// const { authenticated, authorized } = require("./middleware");
 
 //Create get Response
 app.get("/", (req, res) => {
@@ -32,29 +34,17 @@ app.get("/", (req, res) => {
 });
 
 app.group("/api/v1", router => {
-  // //GET all accounts
-  // router.get("/accounts", AccountController.index);
-  // //GET detail route
-  // router.get("/account/:id", AccountController.show);
-  // //POST new account
-  // router.post("/account", AccountController.create);
-  // //PATCH(update) an account
-  // router.patch("/account/:id", AccountController.update);
-  // //DELETE an account
-  // router.delete("/account/:id", AccountController.delete);
-  // //GET ARTICLE by account_id
-
   // //POST-LOGIN
-  router.post("/login", AuthController.login);
+  // router.post("/login", AuthController.login);
 
   // ------ CATEGORIES ------
 
   // GET all categories
   router.get("/categories", CategoriesController.index);
   // POST a categories
-  router.post("/categories", CategoriesController.create)
+  router.post("/category", CategoriesController.create)
   // GET all articles of a category
-  router.get("/category/:category_id/articles", CategoriesController.getArticleByCategories)
+  router.get("/category/:id/articles", CategoriesController.getArticleByCategories)
 
 
   // ------- ARTICLES ------
@@ -74,11 +64,17 @@ app.group("/api/v1", router => {
   
   // ------ Comments ------
   
-  
   // POST a comment 
-  router.post('/article/:article_id/comment', CommentController.create)
-});
+  router.post('/article/:id/comment', CommentsController.new)
+  // UPDATE comment
+  router.put('/article/:id/comment', CommentsController.editcomment)
+  // DELETE a comments
+  router.delete('/article/:id/comment', CommentsController.deletecomment)
 
+  //  ------ Users ------
+  // router.post('/register', UsersController.new)
+});
+// fungi belum diketahoui
 // app.use((err, req, res, next) => {
 //   if (err.name === "UnauthorizedError") {
 //     res.status(401).json({ message: "You are not authorized." });

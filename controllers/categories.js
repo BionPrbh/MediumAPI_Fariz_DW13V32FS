@@ -3,40 +3,45 @@ const Articles = require("../models").Article;
 
 // retrieve all categories
 exports.index = (req,res) => {
-  Categories.findAll().then(data => res.send(data));
+  Categories.findAll().then(data => {
+    let arr = []
+    data.map(item => {
+      let format = {
+        id:item.id,
+        name:item.name
+      }
+      arr.push(format)
+    })
+    res.send(arr)
+  });
 };
 
 // add one category to table
 exports.create = (req,res) => {
   Categories.create(req.body).then(data => 
     res.send({
-      message: 'Successfully added one category',
-      data
+      id: data.id,
+      name: data.name
     })
   );
 }
 
-const Collate = (data) => {
-  let cleaned = data.map(item => {
-    let formatted = {
-      id: item.id,
-      title: item.title,
-      category:{
-        id: item.Category.id,
-        name: item.Category.id
-      },
-      content: item.content,
-      img: item.img,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt
-    }
-    return formatted
-  })
-  return cleaned
-}
-
 exports.getArticleByCategories = (req,res) => {
   Articles.findAll({
+    include:[
+      {
+        model: Categories,
+        as: 'Category',
+        attributes:{
+          exclude:[
+            "is_published",
+            "is_archived",
+            "createdAt",
+            "updatedAt"
+          ]
+        }
+      }
+    ],
     attributes:{
       exclude:[
         "category_id",
@@ -47,20 +52,8 @@ exports.getArticleByCategories = (req,res) => {
         "author_id"
       ]
     },
-    include:[{
-      model: Categories,
-      as: 'Category',
-      attributes: {
-        exclude:[
-          "is_published",
-          "is_archived",
-          "createdAt",
-          "updatedAt"
-        ]
-      }
-    }],
-    where:{
-      category_id: req.params.category_id
+    where: {
+      category_id: req.params.id
     }
-  }).then(data => res.send(Collate(data)))
+  }).then(data => res.send(data))
 }

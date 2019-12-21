@@ -5,7 +5,32 @@ const Comments = require("../models").Comment
 
 // get all articles
 exports.index = (req, res) => {
-  Articles.findAll().then(data => res.send(data));
+  Articles.findAll({
+    include: [
+      {
+        model: Categories,
+        as: 'Category',
+        attributes:{
+          exclude: [
+            "is_published",
+            "is_archived",
+            "createdAt",
+            "updatedAt"
+          ]
+        }
+      }
+    ],
+    attributes:{
+      exclude:[
+        "category_id",
+        "category_name",
+        "is_published",
+        "is_archived",
+        "slug",
+        "author_id"
+      ]
+    }
+  }).then(data => res.send(data));
 };
 
 exports.ascnd10 = (req, res) => {
@@ -76,7 +101,7 @@ exports.delete = (req, res) => {
     }
   }).then(res.send({message:'delete success'}))
 }
-``
+
 exports.detailed = (req,res) => {
   Articles.findOne({
     include:[
@@ -114,6 +139,8 @@ exports.detailed = (req,res) => {
         "category_name",
         "is_published",
         "is_archived",
+        "createdAt",
+        "updatedAt",
         "slug",
         "author_id"
       ]
