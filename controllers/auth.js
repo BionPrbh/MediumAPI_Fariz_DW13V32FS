@@ -41,7 +41,6 @@ exports.login = (req, res) => {
 
 exports.register = (req, res) => {
   let { fullname, username, email, password } = req.body;
-
   User.findAll({
     where: {
       username
