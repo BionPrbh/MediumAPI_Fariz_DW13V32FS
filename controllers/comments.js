@@ -1,7 +1,7 @@
 const Comments = require('../models').Comment
 const Articles = require("../models").Article
 
-exports.new = (req, res) => { 
+exports.newComment = (req, res) => { 
   Comments.create(req.body).then(data => {
     Comments.findOne({
       include: [

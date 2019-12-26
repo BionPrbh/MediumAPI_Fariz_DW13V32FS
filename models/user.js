@@ -5,7 +5,11 @@ module.exports = (sequelize, DataTypes) => {
     username: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    is_active: DataTypes.BOOLEAN
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: 1
+    }
   }, {});
   User.associate = function(models) {
     User.hasMany(models.Article, {as: 'Articles', foreignKey: 'author_id'}) 
